@@ -57,7 +57,7 @@ def dm02():
     t4 = t1.unsqueeze(2)
     print(f't4: {t4}, shape: {t4.shape}')       # (2, 3, 1)
 
-    # 5. 在3微上(不存在), 添加一个维度.
+    # 5. 在3维上(不存在), 添加一个维度.
     # t5 = t1.unsqueeze(3)        # 报错, 越界.
     # print(f't5: {t5}, shape: {t5.shape}')       # (2, 3, ???, 1)
 
@@ -116,7 +116,7 @@ def dm04():
 
 # 5. 测试
 if __name__ == '__main__':
-    dm01()
+    # dm01()
     # dm02()
     # dm03()
-    # dm04()
+    dm04()

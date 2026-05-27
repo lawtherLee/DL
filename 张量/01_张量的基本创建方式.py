@@ -46,8 +46,8 @@ def dm01():
     print('-' * 30)
 
     # 场景4: 尝试直接创建 指定维度(例如: 2行3列的)张量
-    t4 = torch.tensor(2, 3)               # 报错.
-    print(f't4: {t4}, type: {type(t4)}')
+    # t4 = torch.tensor(2, 3)               # 报错.
+    # print(f't4: {t4}, type: {type(t4)}')
 
 
 # 2. 定义函数, 演示: torch.Tensor 根据形状创建张量, 其也可用来创建指定数据的张量
@@ -99,6 +99,6 @@ def dm03():
 
 # 4. 定义测试函数.
 if __name__ == '__main__':
-    # dm01()        # 掌握
+    dm01()        # 掌握
     # dm02()
     # dm03()
