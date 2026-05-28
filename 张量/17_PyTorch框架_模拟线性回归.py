@@ -101,7 +101,7 @@ def train(x, y, coef):
     # 9.6 显示图像.
     plt.show()
 
-    plt.show()
+    # plt.show()
 
 
 # 3. 测试.
