@@ -11,6 +11,7 @@ plt.rcParams["font.sans-serif"] = [
     "Arial Unicode MS",
     "Heiti TC",
     "PingFang SC",
+    "SimHei",
 ]  # 用来正常显示中文标签
 plt.rcParams["axes.unicode_minus"] = False  # 用来正常显示负号
 
@@ -42,6 +43,7 @@ def train(x, y, coef):
     # 2. 创建数据加载器对象.
     # 参1: 数据集对象, 参2: 批次大小, 参3: 是否打乱数据(训练集打乱, 测试集不打乱)
     dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
+
     # 3. 创建初始的 线性回归模型.
     # 参1: 输入特征维度, 参2: 输出特征维度.
     model = nn.Linear(1, 1)
