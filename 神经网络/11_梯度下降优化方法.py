@@ -35,8 +35,9 @@
                     Gt:     本次的梯度.
             学习率:
                 学习率 = 学习率 / (sqrt(St) + 小常数)
+                η = η / √η + σ
                 解释:
-                    小常数: 1e-10, 目的: 防止分母变为0
+                    小常数: 1e^-10, 目的: 防止分母变为0
             梯度下降公式:
                 W新 = W旧 - 调整后的学习率 * Gt
         缺点:
@@ -72,7 +73,7 @@
                 Mt^ = Mt / (1 - β1 ^ t)
                 St^ = St / (1 - β2 ^ t)
             权重更新公式:
-                W新 = W旧 - 学习率 / (sqrt(St^) + 小常数)  *  Mt^
+                W新 = W旧 - η / (sqrt(St^) + 小常数)  *  Mt^
         大白话翻译:
             Adam = RMSProp + Momentum
 
@@ -96,26 +97,27 @@ def dm01_momentum():
     # 1. 初始化权重参数.
     w = torch.tensor([1.0], requires_grad=True, dtype=torch.float32)
     # 2. 定义损失函数
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 3. 创建优化器(函数对象) -> 基于SGD(随机梯度下降), 加入参数 momentum, 就是 动量法.
     # 参1: (待优化的)参数列表, 参2: 学习率, 参3: 动量参数.
-    optimizer = optim.SGD(params=[w], lr=0.01, momentum=0.9)  # 细节: momentum=0(默认), 只考虑: 本次梯度.
+    optimizer = optim.SGD(
+        params=[w], lr=0.01, momentum=0.9
+    )  # 细节: momentum=0(默认), 只考虑: 本次梯度.
     # 4. 计算梯度值: 梯度清零 + 反向传播 + 参数更新
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
-    print(f'w: {w}, w.grad: {w.grad}')
+    print(f"w: {w}, w.grad: {w.grad}")
 
     # 5.重复上述的步骤, 第2次 更新权重参数.
     # 5.1 定义损失函数.
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 5.2 计算梯度值: 梯度清零 + 反向传播 + 参数更新
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
     # 5.3 打印结果.
-    print(f'w: {w}, w.grad: {w.grad}')
-
+    print(f"w: {w}, w.grad: {w.grad}")
 
 
 # 2. 定义函数, 演示: 梯度下降优化方法 -> 自适应学习率(AdaGrad)
@@ -123,7 +125,7 @@ def dm02_adagrad():
     # 1. 初始化权重参数.
     w = torch.tensor([1.0], requires_grad=True, dtype=torch.float32)
     # 2. 定义损失函数
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 3. 创建优化器(函数对象)
     # 思路1: 基于SGD(随机梯度下降), 加入参数 momentum, 就是 动量法.
     # 参1: (待优化的)参数列表, 参2: 学习率, 参3: 动量参数.
@@ -136,24 +138,25 @@ def dm02_adagrad():
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
-    print(f'w: {w}, w.grad: {w.grad}')
+    print(f"w: {w}, w.grad: {w.grad}")
 
     # 5.重复上述的步骤, 第2次 更新权重参数.
     # 5.1 定义损失函数.
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 5.2 计算梯度值: 梯度清零 + 反向传播 + 参数更新
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
     # 5.3 打印结果.
-    print(f'w: {w}, w.grad: {w.grad}')
+    print(f"w: {w}, w.grad: {w.grad}")
+
 
 # 3. 定义函数, 演示: 梯度下降优化方法 -> 自适应学习率(RMSProp)
 def dm03_rmsprop():
     # 1. 初始化权重参数.
     w = torch.tensor([1.0], requires_grad=True, dtype=torch.float32)
     # 2. 定义损失函数
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 3. 创建优化器(函数对象)
     # 思路1: 基于SGD(随机梯度下降), 加入参数 momentum, 就是 动量法.
     # 参1: (待优化的)参数列表, 参2: 学习率, 参3: 动量参数.
@@ -169,17 +172,17 @@ def dm03_rmsprop():
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
-    print(f'w: {w}, w.grad: {w.grad}')
+    print(f"w: {w}, w.grad: {w.grad}")
 
     # 5.重复上述的步骤, 第2次 更新权重参数.
     # 5.1 定义损失函数.
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 5.2 计算梯度值: 梯度清零 + 反向传播 + 参数更新
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
     # 5.3 打印结果.
-    print(f'w: {w}, w.grad: {w.grad}')
+    print(f"w: {w}, w.grad: {w.grad}")
 
 
 # 4. 定义函数, 演示: 梯度下降优化方法 -> 自适应矩估计(Adam)
@@ -187,7 +190,7 @@ def dm04_adam():
     # 1. 初始化权重参数.
     w = torch.tensor([1.0], requires_grad=True, dtype=torch.float32)
     # 2. 定义损失函数
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 3. 创建优化器(函数对象)
     # 思路1: 基于SGD(随机梯度下降), 加入参数 momentum, 就是 动量法.
     # 参1: (待优化的)参数列表, 参2: 学习率, 参3: 动量参数.
@@ -200,29 +203,30 @@ def dm04_adam():
     # optimizer = optim.RMSprop(params=[w], lr=0.01, alpha=0.99)
 
     # 思路4: 基于Adam(自适应矩估计).
-    optimizer = optim.Adam(params=[w], lr=0.01, betas=(0.9, 0.999)) # betas=(梯度用的 衰减系数, 学习率用的 衰减系数)
+    optimizer = optim.Adam(
+        params=[w], lr=0.01, betas=(0.9, 0.999)
+    )  # betas=(梯度用的 衰减系数, 学习率用的 衰减系数)
 
     # 4. 计算梯度值: 梯度清零 + 反向传播 + 参数更新
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
-    print(f'w: {w}, w.grad: {w.grad}')
+    print(f"w: {w}, w.grad: {w.grad}")
 
     # 5.重复上述的步骤, 第2次 更新权重参数.
     # 5.1 定义损失函数.
-    criterion = ((w ** 2) / 2.0)
+    criterion = (w**2) / 2.0
     # 5.2 计算梯度值: 梯度清零 + 反向传播 + 参数更新
     optimizer.zero_grad()
     criterion.sum().backward()
     optimizer.step()
     # 5.3 打印结果.
-    print(f'w: {w}, w.grad: {w.grad}')
-
+    print(f"w: {w}, w.grad: {w.grad}")
 
 
 # 5. 测试
-if __name__ == '__main__':
+if __name__ == "__main__":
     dm01_momentum()
-    # dm02_adagrad()
-    # dm03_rmsprop()
-    # dm04_adam()
+    dm02_adagrad()
+    dm03_rmsprop()
+    dm04_adam()
