@@ -76,7 +76,9 @@ def dm01():
     # 4. 创建学习率衰减对象.
     # 思路1: 创建等间隔学习率衰减对象.
     # 参1: 优化器对象, 参2: 间隔的轮数(多少轮调整一次学习率), 参3: 学习率衰减系数.
-    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.5)   # [0.1, 0.1, 0.1... 0.05...]
+    scheduler = optim.lr_scheduler.StepLR(
+        optimizer, step_size=50, gamma=0.5
+    )  # [0.1, 0.1, 0.1... 0.05...]
 
     # 5. 创建两个列表, 分别表示: 训练轮数, 每轮训练用的学习率
     # epoch_list = [0, 1, 2, 3.... 50, 51, 52...100, 101, 101... 150, 151...199]
@@ -84,10 +86,10 @@ def dm01():
     lr_list, epoch_list = [], []
 
     # 6. 循环遍历训练轮数, 进行具体的训练.
-    for epoch in range(epochs):     # epoch: 0 ~ 199
+    for epoch in range(epochs):  # epoch: 0 ~ 199
         # 7. 获取当前轮数 和 学习率, 并保存到列表中.
         epoch_list.append(epoch)
-        lr_list.append(scheduler.get_last_lr())     # 获取最后的lr(learning rate, 学习率)
+        lr_list.append(scheduler.get_last_lr())  # 获取最后的lr(learning rate, 学习率)
 
         # 8. 循环遍历, 每轮每批次进行训练.
         for batch in range(iteration):
@@ -102,13 +104,15 @@ def dm01():
         # 12. 更新学习率.
         scheduler.step()
     # 13. 打印结果:
-    print(f'lr_list: {lr_list}')        # [0.1, 0.1, 0.1..., 0.05........,0.025.........,  0.0125...]
+    print(
+        f"lr_list: {lr_list}"
+    )  # [0.1, 0.1, 0.1..., 0.05........,0.025.........,  0.0125...]
 
     # 14. 可视化.
     # x轴: 训练的轮数, y轴: 每轮训练用的学习率
     plt.plot(epoch_list, lr_list)
-    plt.xlabel('Epoch')
-    plt.ylabel('Learning Rate')
+    plt.xlabel("Epoch")
+    plt.ylabel("Learning Rate")
     plt.show()
 
 
@@ -137,7 +141,9 @@ def dm02():
     # 思路2: 创建指定间隔学习率衰减对象.
     # 定义变量, 记录要修改学习率的轮数.
     milestones = [50, 125, 160]
-    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=0.5)
+    scheduler = optim.lr_scheduler.MultiStepLR(
+        optimizer, milestones=milestones, gamma=0.5
+    )
 
     # 5. 创建两个列表, 分别表示: 训练轮数, 每轮训练用的学习率
     # epoch_list = [0, 1, 2, 3.... 50, 51, 52...100, 101, 101... 150, 151...199]
@@ -145,10 +151,10 @@ def dm02():
     lr_list, epoch_list = [], []
 
     # 6. 循环遍历训练轮数, 进行具体的训练.
-    for epoch in range(epochs):     # epoch: 0 ~ 199
+    for epoch in range(epochs):  # epoch: 0 ~ 199
         # 7. 获取当前轮数 和 学习率, 并保存到列表中.
         epoch_list.append(epoch)
-        lr_list.append(scheduler.get_last_lr())     # 获取最后的lr(learning rate, 学习率)
+        lr_list.append(scheduler.get_last_lr())  # 获取最后的lr(learning rate, 学习率)
 
         # 8. 循环遍历, 每轮每批次进行训练.
         for batch in range(iteration):
@@ -163,13 +169,15 @@ def dm02():
         # 12. 更新学习率.
         scheduler.step()
     # 13. 打印结果:
-    print(f'lr_list: {lr_list}')        # [0.1, 0.1, 0.1..., 0.05........,0.025.........,  0.0125...]
+    print(
+        f"lr_list: {lr_list}"
+    )  # [0.1, 0.1, 0.1..., 0.05........,0.025.........,  0.0125...]
 
     # 14. 可视化.
     # x轴: 训练的轮数, y轴: 每轮训练用的学习率
     plt.plot(epoch_list, lr_list)
-    plt.xlabel('Epoch')
-    plt.ylabel('Learning Rate')
+    plt.xlabel("Epoch")
+    plt.ylabel("Learning Rate")
     plt.show()
 
 
@@ -209,10 +217,10 @@ def dm03():
     lr_list, epoch_list = [], []
 
     # 6. 循环遍历训练轮数, 进行具体的训练.
-    for epoch in range(epochs):     # epoch: 0 ~ 199
+    for epoch in range(epochs):  # epoch: 0 ~ 199
         # 7. 获取当前轮数 和 学习率, 并保存到列表中.
         epoch_list.append(epoch)
-        lr_list.append(scheduler.get_last_lr())     # 获取最后的lr(learning rate, 学习率)
+        lr_list.append(scheduler.get_last_lr())  # 获取最后的lr(learning rate, 学习率)
 
         # 8. 循环遍历, 每轮每批次进行训练.
         for batch in range(iteration):
@@ -227,20 +235,20 @@ def dm03():
         # 12. 更新学习率.
         scheduler.step()
     # 13. 打印结果:
-    print(f'lr_list: {lr_list}')        # [0.1, 0.1, 0.1..., 0.05........,0.025.........,  0.0125...]
+    print(
+        f"lr_list: {lr_list}"
+    )  # [0.1, 0.1, 0.1..., 0.05........,0.025.........,  0.0125...]
 
     # 14. 可视化.
     # x轴: 训练的轮数, y轴: 每轮训练用的学习率
     plt.plot(epoch_list, lr_list)
-    plt.xlabel('Epoch')
-    plt.ylabel('Learning Rate')
+    plt.xlabel("Epoch")
+    plt.ylabel("Learning Rate")
     plt.show()
 
 
-
-
 # 4. 测试
-if __name__ == '__main__':
-    # dm01()
+if __name__ == "__main__":
+    dm01()
     # dm02()
-    dm03()
+    # dm03()
