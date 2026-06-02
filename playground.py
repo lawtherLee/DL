@@ -1,49 +1,39 @@
-import torch
-import torch.nn as nn
-from torchsummary import summary
+import torch  # PyTorch框架, 封装了张量的各种操作
+from torch.utils.data import (
+    TensorDataset,
+)  # 数据集对象.   数据 -> Tensor -> 数据集 -> 数据加载器
+from torch.utils.data import DataLoader  # 数据加载器.
+import torch.nn as nn  # neural network, 封装了神经网络的各种操作
+import torch.optim as optim  # 优化器
+from sklearn.model_selection import train_test_split  # 训练集和测试集的划分
+import matplotlib.pyplot as plt  # 绘图
+import numpy as np  # 数组(矩阵)操作
+import pandas as pd  # 数据处理
+import time  # 时间模块
 
 
-class ModelDemo(nn.Module):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.linear1 = nn.Linear(3, 3)
-        self.linear2 = nn.Linear(3, 2)
-        self.output = nn.Linear(2, 2)
+def create_dataset():
+    data = pd.read_csv("./data/手机价格预测.csv")
+    # print(f"data: {data.head()}")
 
-        nn.init.xavier_normal_(self.linear1.weight)
-        nn.init.zeros_(self.linear1.bias)
+    x, y = data.iloc[:, :-1], data.iloc[:, -1]
 
-        nn.init.kaiming_normal_(self.linear2.weight)
-        nn.init.zeros_(self.linear2.bias)
+    x = x.astype(np.float32)
+    # print(f"x: {x.head()}, {x.shape}")
 
-    def forward(self, _x):
-        return torch.softmax(
-            self.output(torch.relu(self.linear2(torch.sigmoid(self.linear1(_x))))),
-            dim=1,
-        )
+    x_train, x_test, y_train, y_test = train_test_split(
+        x, y, test_size=0.2, random_state=3, stratify=y
+    )
 
+    train_dataset = TensorDataset(
+        torch.tensor(x_train.values), torch.tensor(y_train.values)
+    )
 
-def train():
-    my_model = ModelDemo()
-    # print(my_model)
-
-    data = torch.randn(5, 3)
-    print(f"data: {data}")
-    print(f"data.shape: {data.shape}")
-    print(f"data.requires_grad: {data.requires_grad}")
-
-    output = my_model(data)
-    print(f"output: {output}")
-    print(f"output.shape: {output.shape}")
-    print(f"output.requires_grad: {output.requires_grad}")
-    # print("*" * 50)
-
-    summary(my_model, (5, 3))
-
-    for name, param in my_model.named_parameters():
-        print(f"name: {name}")
-        print(f"param: {param}\n")
+    test_dataset = TensorDataset(
+        torch.tensor(x_test.values), torch.tensor(y_test.values)
+    )
+    return train_dataset, test_dataset, x_train.shape[1], len(np.unique(y))
 
 
 if __name__ == "__main__":
-    train()
+    train_dataset, test_dataset, input_num, output_num = create_dataset()
