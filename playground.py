@@ -1,39 +1,53 @@
-import torch  # PyTorch框架, 封装了张量的各种操作
-from torch.utils.data import (
-    TensorDataset,
-)  # 数据集对象.   数据 -> Tensor -> 数据集 -> 数据加载器
-from torch.utils.data import DataLoader  # 数据加载器.
-import torch.nn as nn  # neural network, 封装了神经网络的各种操作
-import torch.optim as optim  # 优化器
-from sklearn.model_selection import train_test_split  # 训练集和测试集的划分
-import matplotlib.pyplot as plt  # 绘图
-import numpy as np  # 数组(矩阵)操作
-import pandas as pd  # 数据处理
-import time  # 时间模块
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import pandas as pd
+from torch.utils.data import DataLoader, TensorDataset
+import torch.nn.functional as F
+
+
+class Model(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super().__init__()
+        self.linear1 = nn.Linear(input_dim, 64)
+        self.linear2 = nn.Linear(64, output_dim)
+
+    def forward(self, x):
+        return torch.softmax(self.linear2(torch.relu(self.linear1(x))), dim=1)
+
+
+def train(data):
+    model = Model(20, 5)
+    criterion = nn.MSELoss()
+    optimizer = optim.SGD(model.parameters(), lr=0.01)
+
+    dataloader = DataLoader(data, batch_size=8, shuffle=True)
+    epochs = 20
+
+    for epoch in range(epochs):
+        total_loss = 0
+        total_num = 0
+        model.train()
+        for x, y in dataloader:
+            output = model(x)
+            loss = criterion(output, y)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            total_num += len(y)
+            total_loss += loss.item() * len(y)
+        print(f"epoch: {epoch + 1:4} loss: {total_loss / total_num:.2f}")
+    torch.save(model.state_dict(), "./model/train_data.pth")
 
 
 def create_dataset():
     data = pd.read_csv("./data/手机价格预测.csv")
-    # print(f"data: {data.head()}")
-
-    x, y = data.iloc[:, :-1], data.iloc[:, -1]
-
-    x = x.astype(np.float32)
-    # print(f"x: {x.head()}, {x.shape}")
-
-    x_train, x_test, y_train, y_test = train_test_split(
-        x, y, test_size=0.2, random_state=3, stratify=y
-    )
-
-    train_dataset = TensorDataset(
-        torch.tensor(x_train.values), torch.tensor(y_train.values)
-    )
-
-    test_dataset = TensorDataset(
-        torch.tensor(x_test.values), torch.tensor(y_test.values)
-    )
-    return train_dataset, test_dataset, x_train.shape[1], len(np.unique(y))
+    x = torch.tensor(data.iloc[:, :-1].values, dtype=torch.float32)
+    y = torch.tensor(data.iloc[:, -1].values, dtype=torch.long)
+    y = F.one_hot(y, num_classes=5).to(torch.float32)
+    return TensorDataset(x, y)
 
 
 if __name__ == "__main__":
-    train_dataset, test_dataset, input_num, output_num = create_dataset()
+    train_data = create_dataset()
+    train(train_data)
