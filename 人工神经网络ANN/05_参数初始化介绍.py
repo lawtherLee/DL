@@ -22,7 +22,7 @@
 """
 
 # 导包
-import torch.nn as nn  # neural network: 神经网络
+import torch.nn as nn  # neural network: 人工神经网络ANN
 
 
 # 1. 均匀分布随机初始化
